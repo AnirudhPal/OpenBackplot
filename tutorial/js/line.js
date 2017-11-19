@@ -19,17 +19,17 @@ function path()
 }
 function assign()
 {
-	x = parseInt(str[j + 1]);
-	y = parseInt(str[j + 2]);
-	z = parseInt(str[j + 3]);
-	x1 = parseInt(str[j + 4]);
-	y1 = parseInt(str[j + 5]);
-	z1 = parseInt(str[j + 6]);
+	x = parseFloat(str[j + 1]);
+	y = parseFloat(str[j + 2]);
+	z = parseFloat(str[j + 3]);
+	x1 = parseFloat(str[j + 4]);
+	y1 = parseFloat(str[j + 5]);
+	z1 = parseFloat(str[j + 6]);
 }
 
 function draw()
 {
-	var tmp = "L 0 0 0 0 1 0 10"
+	var tmp = "L 0 0 0 0 0.89 0 10"
 	str = tmp.split(" ");
 	var strLength = str.length;
 	var i = 0;
