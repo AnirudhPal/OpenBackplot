@@ -1,0 +1,19 @@
+{
+  "name": "livetext",
+  "version": "0.0.1",
+  "description": "Setup Shared Text Editing",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Anirudh Pal (Based on Asif Ahmeds Work)",
+  "license": "MIT",
+  "devDependencies": {
+    "ejs": "^2.5.7",
+    "express": "^4.16.2"
+  },
+  "dependencies": {
+    "redis": "^2.8.0",
+    "share": "^0.6.3"
+  }
+}
