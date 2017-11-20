@@ -1,76 +1,97 @@
+/**Global Variables For The View**/
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 var renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild( renderer.domElement );
 camera.position.z = 4;
-
 var material = new THREE.LineBasicMaterial({ color: 0x0000ff });
 var geometry = new THREE.Geometry();
-var j;
-var line;
-var asnc = 0;
-var x; var y; var z; var x1; var y1; var z1; var xf; var yf; var zf;
+
+/**Sleep Function to Put to Thread to sleep**/
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
-function path() 
+/**Function to draw the lines, it draws the lines between to points**/
+function drawLine(x,y,z,x1,y1,z1) 
 {	
+		//Initialize the basis to create lines
 		var geometry = new THREE.Geometry();
+		//Add the line
 		geometry.vertices.push(new THREE.Vector3(x,y,z), new THREE.Vector3(x1,y1,z1));
-		line = new THREE.Line(geometry, material);
+		//Initialize the line
+		var line = new THREE.Line(geometry, material);
+		//Add the newline to scene
 		scene.add(line);
 		renderer.render( scene, camera );
 
 }
-function assign()
-{
-	x = parseFloat(str[j + 1]);
-	y = parseFloat(str[j + 2]);
-	z = parseFloat(str[j + 3]);
-	x1 = parseFloat(str[j + 4]);
-	y1 = parseFloat(str[j + 5]);
-	z1 = parseFloat(str[j + 6]);
-	xf = x1;
-	yf = y1;
-	zf = z1;
-	
-}
 
-async function draw()
+/**According to the speed it draws every line that is in the string**/
+async function lineAnimator(tmp)
 {
-	var tmp = "L 0 0 0 1 0 0 7 L 1 0 0 1 1 0 80";
-	str = tmp.split(" ");
-	var strLength = str.length;
+	//Split the string according to the delimeter
+	tmp = tmp.split("\n");
+	console.log(tmp);
+	var strLength = tmp.length;
+
+	//Loop to go through each line and draw it on the screen according to the speed
 	var i = 0;
-	for (i = 0; i < strLength; i += 8)
+	for (i = 0; i < strLength; i++)
 	{
-		var speed = parseFloat(str[i + 7]);
+		//Split the string according to the delimeter
+		var str = tmp[i].split(" ");
+		console.log(str);
+		//Initialize the instance variables required for this function 
+		var x = parseFloat(str[1]);
+        	var y = parseFloat(str[2]);
+        	var z = parseFloat(str[3]);
+        	var x1 = parseFloat(str[4]);
+        	var y1 = parseFloat(str[5]);
+        	var z1 = parseFloat(str[6]);
+		var speed = parseFloat(str[7]);
+		
+		//Convert speed to 1 second speed
 		speed /=  60; 
-		j = i;
-		assign();
         	var p = 0;
+
+		//Get the line distance
 		var dist = Math.sqrt(Math.pow((x1-x), 2)+Math.pow((y1-y), 2)+Math.pow((z1-z), 2));
+
+		//If speed is greater than the distance then just draw the line
 		if (dist < speed)
 		{
-			path();
+			//Draw the Line
+			drawLine(x,y,z,x1,y1,z1);
 		}
 		else{
+			//Get how many units are needed 
 			var n = dist / speed;
-			var xn = (x1 - x) / n; var yn = (y1-y) / n; 
+			//Get the unit distance for each time unit
+			var xn = (x1 - x) / n; var yn = (y1-y) / n; var zn = (z1 - z) / n;
+			
+			//According to the units draw the line in each step 
         		for ( p = 0; p <= n; p++)
 			{
+				//Calculate the line size to draw according to the axises
                 		x1 = x + p * xn;
                			y1 = y + p * yn;
-                		path();
+				z1 = z + p * zn;
+				
+				//Draw the line
+                		drawLine(x,y,z,x1,y1,z1);
+				
+				//Sleep for the process to finish
         			await sleep(1000);
 			}
-			x1 = xf
-			y1 = yf;
-			z1 = zf;
-			path(); 
+			
+			//Draw the remaining part of the line in case it is not a multiple of the speed
+			x1 = parseFloat(str[4]);
+			y1 = parseFloat(str[5]);
+			z1 = parseFloat(str[6]);
+			drawLine(x,y,z,x1,y1,z1); 
 		}   
 
 	}
 }
-draw();
+lineAnimator("L 0 0 0 1 0 0 7\nL 1 0 0 1 1 0 80\n");
