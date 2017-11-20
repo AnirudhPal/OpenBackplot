@@ -32,7 +32,6 @@ async function lineAnimator(tmp)
 {
 	//Split the string according to the delimeter
 	tmp = tmp.split("\n");
-	console.log(tmp);
 	var strLength = tmp.length;
 
 	//Loop to go through each line and draw it on the screen according to the speed
@@ -42,30 +41,29 @@ async function lineAnimator(tmp)
 		//Split the string according to the delimeter
 		var str = tmp[i].split(" ");
 		if (str.length < 8)
-			return;
-		console.log(str);
+			break;
 		//Initialize the instance variables required for this function 
 		var x = parseFloat(str[1]);
-		if (x === "")
-			return;
+		if (str[1] === "")
+			break;
         	var y = parseFloat(str[2]);
-		if (y === "")
-			return;
+		if (str[2] === "")
+			break;
         	var z = parseFloat(str[3]);
-		if (z === "")
-			return;
+		if (str[3] === "")
+			break;
         	var x1 = parseFloat(str[4]);
-		if (x1 === "")
-			return;
+		if (str[4] === "")
+			break;
         	var y1 = parseFloat(str[5]);
-		if (y1 === "")
-			return;
+		if (str[5] === "")
+			break;
         	var z1 = parseFloat(str[6]);
-		if (z1 === "")
-			return;
+		if (str[6] === "")
+			break;
 		var speed = parseFloat(str[7]);
-		if (speed === "")
-			return;
+		if (str[7] === "")
+			break;
 		//Convert speed to 1 second speed
 		speed /=  60; 
         	var p = 0;
@@ -109,4 +107,4 @@ async function lineAnimator(tmp)
 
 	}
 }
-lineAnimator("L 0 0 0 1            \nL 1 0 0 1 1 0 80\n");
+lineAnimator("L 0 0 0 1 0 0 6\nL 1 0 0 1 1 0 6");

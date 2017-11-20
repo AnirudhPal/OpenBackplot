@@ -1,5 +1,8 @@
 // Wait for things to Load
 window.onload = function() {	
+	// Stores Previous Values
+	var previousTextValue;
+
 	// Get HTML Divisions
 	var pad = document.getElementById('pad');
 	var canvasArea = document.getElementById('canvas');
@@ -28,12 +31,37 @@ window.onload = function() {
 
 	// Draw
 	function animate() {
+		// Store Text Value
+		previousTextValue = pad.value;
+
+		// Rotate & Render
 		cube.rotation.x += 0.1;
 		cube.rotation.y += 0.1;
 		renderer.render( scene, camera );
 	}
 
+	// Track Change
+	var didChangeOccur = function() {
+        	if(previousTextValue != pad.value){
+            		return true;
+        	}
+        	return false;
+    	};
+
+	// Check after Interval
+	setInterval(function()	{
+        	if(didChangeOccur()){
+            		animate();
+        	}
+    	}, 1000);
+
 	// Called Upon Input
 	pad.addEventListener('input', animate);
 	animate();
+
+	// ShareJS Stuff (Stores Stuff)
+	sharejs.open('home', 'text', function(error, doc) {
+        	doc.attach_textarea(pad);
+        	animate();
+    	});
 }
