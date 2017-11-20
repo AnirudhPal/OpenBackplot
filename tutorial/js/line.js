@@ -41,16 +41,31 @@ async function lineAnimator(tmp)
 	{
 		//Split the string according to the delimeter
 		var str = tmp[i].split(" ");
+		if (str.length < 8)
+			return;
 		console.log(str);
 		//Initialize the instance variables required for this function 
 		var x = parseFloat(str[1]);
+		if (x === "")
+			return;
         	var y = parseFloat(str[2]);
+		if (y === "")
+			return;
         	var z = parseFloat(str[3]);
+		if (z === "")
+			return;
         	var x1 = parseFloat(str[4]);
+		if (x1 === "")
+			return;
         	var y1 = parseFloat(str[5]);
+		if (y1 === "")
+			return;
         	var z1 = parseFloat(str[6]);
+		if (z1 === "")
+			return;
 		var speed = parseFloat(str[7]);
-		
+		if (speed === "")
+			return;
 		//Convert speed to 1 second speed
 		speed /=  60; 
         	var p = 0;
@@ -94,4 +109,4 @@ async function lineAnimator(tmp)
 
 	}
 }
-lineAnimator("L 0 0 0 1 0 0 7\nL 1 0 0 1 1 0 80\n");
+lineAnimator("L 0 0 0 1            \nL 1 0 0 1 1 0 80\n");

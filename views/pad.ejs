@@ -1,0 +1,40 @@
+<!-- Set as HTML 5 -->
+<!DOCTYPE html>
+
+<!-- HTML Script -->
+<html>
+	<!-- Head -->
+	<head> 
+		<!-- Tab Title -->
+    		<title>
+			OpenBackplot
+		</title>
+
+		<!-- Import Bootstrap -->
+    		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+
+		<!-- Import Custom Style Sheet -->
+		<link href="style.css" rel="stylesheet">
+	</head>
+
+	<!-- Body -->
+	<body class="container-fluid">
+		<!-- Sections -->
+		<section class="rows">	
+			<!-- Text Area -->
+			<textarea class="col-md-4 full-height" id="pad">Write your G-Code Here...</textarea>
+
+			<!-- Render Area -->
+			<div class="col-md-8 full-height" id="canvas">
+			</div>
+		</section>
+
+		<!-- JS Scripts -->
+		<script src="https://cdn.rawgit.com/showdownjs/showdown/1.0.2/dist/showdown.min.js">
+		</script>
+		<script src="three.js">
+		</script>
+    		<script src="script.js">
+		</script>
+	</body>
+</html>
