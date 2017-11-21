@@ -27,5 +27,6 @@
     "express": "^4.16.2",
     "redis": "^2.8.0",
     "share": "^0.6.3"
-  }
+  },
+  "devDependencies": {}
 }

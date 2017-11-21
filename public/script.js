@@ -14,24 +14,37 @@ window.onload = function() {
 	// Three JS Setup
 	var scene = new THREE.Scene();
 	var camera = new THREE.PerspectiveCamera(75, w / h, 0.1, 1000);
-	camera.position.z = 5;
+	camera.position.z = 4;
 	var renderer = new THREE.WebGLRenderer();
 	renderer.setSize(w, h);
-
+	
 	// Link to HTML Division
 	canvasArea.appendChild(renderer.domElement);
+
+	// Controls
+	var controls = new THREE.OrbitControls(camera, renderer.domElement);
+	controls.update();
 
 	// Geometry Setup
 	var material = new THREE.MeshBasicMaterial({color: 0x00ff00});
 
 	// Draw
-	function animate() {
+	function dataChange() {
 		// Store Text Value
 		previousTextValue = pad.value;
 
 		// Generate
-		lineAnimator(pad.value);
 		console.log(pad.value);
+		dataParser();
+	}
+
+	// Animate
+	function animate() {
+		// Update Camera
+		controls.update();
+		
+		// Render
+		renderer.render(scene, camera);
 	}
 
 	// Sleep  Function to put the thread to sleep
@@ -44,13 +57,15 @@ window.onload = function() {
 	{
 		//Initialize the basis to create lines
 		var geometry = new THREE.Geometry();
+		
 		//Add the line
 		geometry.vertices.push(new THREE.Vector3(x,y,z), new THREE.Vector3(x1,y1,z1));
+		
 		//Initialize the line
 		var line = new THREE.Line(geometry, material);
+		
 		//Add the newline to scene
 		scene.add(line);
-		renderer.render( scene, camera );
 	}
 
 	// Clear Scene
@@ -61,24 +76,30 @@ window.onload = function() {
 	}
 
 	// According to the speed it draws every line that is in the string
-	async function lineAnimator(tmp)
-	{
-		// Clear Scene
-			clearScene();
+	function dataParser() {	
+		// Null Handler
+		var tmp = previousTextValue;
+		console.log(tmp);
+		if(!tmp) {
+			return;
+		}
 
-		//Split the string according to the delimeter
+		// Clear Scene
+		clearScene();
+
+		// Split the string according to the delimeter	
 		tmp = tmp.split("\n");
 		var strLength = tmp.length;
 
-		//Loop to go through each line and draw it on the screen according to the speed
+		// Loop to go through each line and draw it on the screen according to the speed
 		var i = 0;
 		for (i = 0; i < strLength; i++)
 		{
-			//Split the string according to the delimeter
+			// Split the string according to the delimeter
 			var str = tmp[i].split(" ");
 			if (str.length < 8)
 				break;
-			//Initialize the instance variables required for this function
+			// Initialize the instance variables required for this function
 			var x = parseFloat(str[1]);
 			if (str[1] === "")
 				break;
@@ -100,21 +121,21 @@ window.onload = function() {
 			var speed = parseFloat(str[7]);
 			if (str[7] === "")
 				break;
-			//Convert speed to 1 second speed
+			// Convert speed to 1 second speed
 			speed /=  60;
 			var p = 0;
 
-			//Get the line distance
+			// Get the line distance
 			var dist = Math.sqrt(Math.pow((x1-x), 2)+Math.pow((y1-y), 2)+Math.pow((z1-z), 2));
 	
-			//If speed is greater than the distance then just draw the line
+			// If speed is greater than the distance then just draw the line
 			if (dist < speed)
 			{
 				//Draw the Line
 				drawLine(x,y,z,x1,y1,z1);
 			}
 			else{
-				//Get how many units are needed
+				// Get how many units are needed
 				var n = dist / speed;
 				//Get the unit distance for each time unit
 				var xn = (x1 - x) / n; var yn = (y1-y) / n; var zn = (z1 - z) / n;
@@ -152,20 +173,25 @@ window.onload = function() {
 		return false;
 	};
 
-	// Check after Interval
+	// Check after Interval of 1000
 	setInterval(function()	{
 			if(didChangeOccur()){
-			animate();
+			dataChange();
 			}
 			}, 1000);
 
+	// Render after Interval of 10
+	setInterval(function() {
+		animate();
+	}, 10);
+
 	// Called Upon Input
-	pad.addEventListener('input', animate);
-	animate();
+	pad.addEventListener('input', dataChange);
+	dataChange();
 
 	// ShareJS Stuff (Stores Stuff)
 	sharejs.open('home', 'text', function(error, doc) {
 			doc.attach_textarea(pad);
-			animate();
+			dataChange();
 			});
 }
