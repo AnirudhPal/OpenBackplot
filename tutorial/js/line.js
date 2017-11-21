@@ -107,4 +107,35 @@ async function lineAnimator(tmp)
 
 	}
 }
+
+function gCodeInterpretor(str)
+{
+	//if the string is null return
+	if (!str)
+	{
+		return;
+	}
+
+	// Stores Output
+
+	//Convert lines to array of lines
+	var lineArray = str.split("\n");
+	
+	//Go through every line
+	var i = 0;
+	for (i = 0; i < lineArray.length; i++ )
+	{
+		// Split into Words
+		var words = lineArray[i].split(" ");
+		
+		// Check Number, Length & G of Words
+		if(words.length < 2 || words[0].indexOf('N') < 0 || words[1].indexOf('G') < 0)
+			continue;
+
+		// Print
+		console.log(lineArray[i]);
+	}
+	
+}
+
 lineAnimator("L 0 0 0 1 0 0 6\nL 1 0 0 1 1 0 6");

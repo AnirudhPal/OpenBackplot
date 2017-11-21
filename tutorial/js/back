@@ -21,7 +21,7 @@ function animatePathDrawing(ctx, x0, y0, x1, y1, x2, y2, duration) {
             progress = Math.min(delta / duration, 1);
         
         // Clear canvas
-        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        //ctx.clearRect(0, 0, ctx.offsetWidth, ctx.offsetHeight);
         
         // Draw curve
         drawBezierSplit(ctx, x0, y0, x1, y1, x2, y2, 0, progress);
@@ -88,9 +88,10 @@ function lerp(v0, v1, t) {
     return ( 1.0 - t ) * v0 + t * v1;
 }
 
-document.addEventListener('DOMContentLoaded',function(){
-    var docCanvas = document.getElementById('canvas'),
-        ctx = docCanvas[0].getContext("2d");
+function main(){
+    var docCanvas = document.getElementById('canvas');
+       ctx = docCanvas.getContext('2d');
 
-    animatePathDrawing(ctx, 0, 100, 150, -50, 300, 100, 5000);
-});
+    animatePathDrawing(docCanvas, 0, 100, 150, -50, 300, 100, 5000);
+}
+main();

@@ -17,7 +17,7 @@ window.onload = function() {
 	camera.position.z = 4;
 	var renderer = new THREE.WebGLRenderer();
 	renderer.setSize(w, h);
-	
+
 	// Link to HTML Division
 	canvasArea.appendChild(renderer.domElement);
 
@@ -33,16 +33,15 @@ window.onload = function() {
 		// Store Text Value
 		previousTextValue = pad.value;
 
-		// Generate
-		console.log(pad.value);
-		dataParser();
+		// Parse
+		gCodeInterpretor(pad.value);
 	}
 
 	// Animate
 	function animate() {
 		// Update Camera
 		controls.update();
-		
+
 		// Render
 		renderer.render(scene, camera);
 	}
@@ -57,13 +56,13 @@ window.onload = function() {
 	{
 		//Initialize the basis to create lines
 		var geometry = new THREE.Geometry();
-		
+
 		//Add the line
 		geometry.vertices.push(new THREE.Vector3(x,y,z), new THREE.Vector3(x1,y1,z1));
-		
+
 		//Initialize the line
 		var line = new THREE.Line(geometry, material);
-		
+
 		//Add the newline to scene
 		scene.add(line);
 	}
@@ -76,10 +75,9 @@ window.onload = function() {
 	}
 
 	// According to the speed it draws every line that is in the string
-	function dataParser() {	
+	function dataParser(str) {	
 		// Null Handler
-		var tmp = previousTextValue;
-		console.log(tmp);
+		var tmp = str
 		if(!tmp) {
 			return;
 		}
@@ -127,7 +125,7 @@ window.onload = function() {
 
 			// Get the line distance
 			var dist = Math.sqrt(Math.pow((x1-x), 2)+Math.pow((y1-y), 2)+Math.pow((z1-z), 2));
-	
+
 			// If speed is greater than the distance then just draw the line
 			if (dist < speed)
 			{
@@ -165,6 +163,97 @@ window.onload = function() {
 		}
 	}
 
+	// GCode --> LCode
+	function gCodeInterpretor(str)
+	{
+		//if the string is null return
+		if (!str)
+		{
+			return;
+		}
+
+		// Stores Output
+		var out = '';
+
+		//Convert lines to array of lines
+		var lineArray = str.split("\n");
+		
+		// Previous XYZ
+		var prevX = 0.0;
+		var prevY = 0.0;
+		var prevZ = 0.0;
+
+		//Go through every line
+		var i = 0;
+		for (i = 0; i < lineArray.length; i++ )
+		{
+			// Split into Words
+			var words = lineArray[i].split(" ");
+
+			// Check Number, Length & G of Words
+			var len = words.length;
+			if(len < 2 || words[0].indexOf('N') < 0 || words[1].indexOf('G') < 0)
+				continue;
+
+			// Iterate till No G
+			var j = 0;
+			for(j = 2; j < len; j++) {
+				// If Not G
+				if(words[j].indexOf('G') < 0)
+					break;
+			}
+
+			// Continue if Len
+			if(j >= len)
+				continue;
+
+			// Else Get X Y Z
+			var X = -9999.9999;
+			var Y = -9999.9999;
+			var Z = -9999.9999;
+			for(; j < len; j++) {
+				// See if X
+				if(words[j].indexOf('X') > -1) {
+					X = parseFloat(words[j].substr(1));
+				}
+
+				// See if Y
+				if(words[j].indexOf('Y') > -1) {
+					Y = parseFloat(words[j].substr(1));	
+				}
+
+				// See if Z
+				if(words[j].indexOf('Z') > -1) {
+					Z = parseFloat(words[j].substr(1));
+				}
+			}
+
+			// Continue if XYZ
+			if(X === -9999.9999 && Y === -9999.9999 && Z === -9999.9999)
+				continue;
+
+			// Fix
+			if(X === -9999.9999)
+				X = prevX;
+			if(Y === -9999.9999)
+				Y = prevY;
+			if(Z === -9999.9999)
+				Z = prevZ;
+
+			// Append
+			out += 'L ' + prevX + ' ' + prevY + ' ' + prevZ + ' ' + X + ' ' + Y + ' ' + Z + ' ' + '100\n';
+
+			// Set
+			prevX = X;
+			prevY = Y;
+			prevZ = Z;
+		}
+		
+		// Print
+		console.log(out);
+		dataParser(out);
+	}
+
 	// Track Change
 	var didChangeOccur = function() {
 		if(previousTextValue != pad.value){
@@ -182,16 +271,20 @@ window.onload = function() {
 
 	// Render after Interval of 10
 	setInterval(function() {
-		animate();
-	}, 10);
+			animate();
+			}, 10);
 
 	// Called Upon Input
 	pad.addEventListener('input', dataChange);
 	dataChange();
 
 	// ShareJS Stuff (Stores Stuff)
-	sharejs.open('home', 'text', function(error, doc) {
-			doc.attach_textarea(pad);
-			dataChange();
-			});
+	if(document.location.pathname.length > 1) {
+		var documentName = document.location.pathname.substring(1);
+		sharejs.open(documentName, 'text', function(error, doc) {
+				doc.attach_textarea(pad);
+				dataChange();
+				});        
+	}
+
 }
