@@ -10,8 +10,13 @@ app.get('/js/three.js',function(req,res)
 	res.sendFile(path.join(__dirname + '/js/three.js'));
 });
 
-app.get('/js/curve.js',function(req,res)
+app.get('/js/OrbitControls.js',function(req,res)
 {
-	res.sendFile(path.join(__dirname + '/js/curve.js'));
+	res.sendFile(path.join(__dirname + '/js/OrbitControls.js'));
+});
+
+app.get('/js/line.js',function(req,res)
+{
+	res.sendFile(path.join(__dirname + '/js/line.js'));
 });
 app.listen(8080);

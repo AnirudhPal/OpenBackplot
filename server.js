@@ -35,5 +35,5 @@ var options = {db: {type: 'redis', client: redis}, };
 share.server.attach(app, options);
 
 // Set Port & Listen (Heroku Support)
-var port = process.env.PORT || 3000
+var port = 80
 app.listen(port);

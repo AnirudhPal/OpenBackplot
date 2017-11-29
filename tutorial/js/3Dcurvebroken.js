@@ -16,20 +16,8 @@ function animate()
 }
 
 //Function to draw the curve in the view
-function drawCurve(x1,y1,x4,y4,xc,yc,z)
+function drawCurve(x1,y1,x4,y4,xc,yc,prevx,prevy,prevz,plcnt)
 { 
-	// Shift Grid
-	var xoff = xc;
-	var yoff = yc;
-	
-	// Fix
-	xc = 0;
-	yc = 0;
-	x1 = x1 - xoff;
-	y1 = y1 - yoff;
-	x4 = x4 - xoff;
-	y4 = y4 - yoff;
-	
 	//Compute Bezier Curve
 	var ax = x1 - xc;
 	var ay = y1 - yc;
@@ -44,17 +32,40 @@ function drawCurve(x1,y1,x4,y4,xc,yc,z)
 	var y3 = yc + by - (k2 * bx);
 	
 	//Intialize the curve for xy plane
+	if ( plcnt === 0) {
 	var curve = new THREE.CubicBezierCurve3(
 		
 		//Initialize the vectors
-		new THREE.Vector3( ax + xoff, ay + yoff, z),
-		new THREE.Vector3( x2 + xoff, y2 + yoff, z),
-		new THREE.Vector3( x3 + xoff, y3 + yoff, z),
-		new THREE.Vector3( bx + xoff, by + yoff, z)
+		new THREE.Vector2( ax, ay , prevz),
+		new THREE.Vector2( x2, y2 , prevz),
+		new THREE.Vector2( x3, y3 , prevz),
+		new THREE.Vector2( bx, by , prevz)
 		
-	);
+	);}
 	
+	//Intialize the curve for xz plane
+	if ( plcnt === 1) {
+	var curve = new THREE.CubicBezierCurve3(
+		
+		//Initialize the vectors
+		new THREE.Vector2( ax, prevy ,ay),
+		new THREE.Vector2( x2, prevy ,y2),
+		new THREE.Vector2( x3, prevy ,y3),
+		new THREE.Vector2( bx, prevy ,by)
+		
+	);}
 
+	//Intialize the curve for yz plane
+	if ( plcnt === 2) {
+	var curve = new THREE.CubicBezierCurve3(
+		
+		//Initialize the vectors
+		new THREE.Vector2( prevx, ax, ay),
+		new THREE.Vector2( prevx, x2, y2),
+		new THREE.Vector2( prevx, x3, y3),
+		new THREE.Vector2( prevx, bx, by)
+		
+	);}
 
 	//Set the points
 	var points = curve.getPoints( 50 );
@@ -70,7 +81,6 @@ function drawCurve(x1,y1,x4,y4,xc,yc,z)
 	scene.add( curveObject );
 	//renderer.render( scene, camera );
 }
-drawCurve(2,1,1,2,1,1,0);
-drawCurve(1,0,0,1,0,0,0);
-//drawCurve(0,0.3147,0,1.6103,0,0.9625,-0.025);
+drawCurve(1,0,0,1,0,0,0,0,0,0);
+drawCurve(1,0,0,1,0,0,0,1,0,2);
 animate();
