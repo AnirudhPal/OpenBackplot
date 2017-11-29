@@ -1,5 +1,22 @@
 # OpenBackplot
 
+GitHub
+====== 
+> https://github.com/AnirudhPal/OpenBackplot
+
+In Class Demo
+============= 
+> http://ec2-18-216-183-59.us-east-2.compute.amazonaws.com/Demo
+
+The Big G-Code
+==============
+>http://ec2-18-216-183-59.us-east-2.compute.amazonaws.com/Hello
+
+How to make your own file?
+==========================
+Enter the following URL into the browser and replace <UniqueName> with whatever file name you want.
+>http://ec2-18-216-183-59.us-east-2.compute.amazonaws.com/<UniqueName>
+
 What is OpenBackplot?
 
 It is intended to be a G-Code Visualizer in which multiple users can edit a shared document simultaneously. For each document a unique id to the link will be added to access the document. Anyone that knows the link can be able to access to the document. We plan to support simulation of the FANUC-NC standard of G-Code intended for CNC Mills and Lathes.
